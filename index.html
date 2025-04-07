@@ -6,90 +6,20 @@
     <title>FlipPDF - Converta Imagens e PDFs</title>
     <link rel="manifest" href="/manifest.json">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #333;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 600px;
-            width: 100%;
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-        select, input[type="file"], input[type="text"] {
-            display: block;
-            margin: 15px auto;
-            padding: 10px;
-            width: 80%;
-            border: 2px solid #3498db;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        input[type="file"] {
-            border-style: dashed;
-        }
-        input[type="file"]::-webkit-file-upload-button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 20px;
-        }
-        button:hover {
-            background-color: #27ae60;
-        }
-        button:disabled {
-            background-color: #95a5a6;
-            cursor: not-allowed;
-        }
-        #preview {
-            max-width: 100%;
-            max-height: 300px;
-            margin-top: 20px;
-            border-radius: 10px;
-            display: none;
-        }
-        #output {
-            margin-top: 20px;
-            display: none;
-        }
-        #output a {
-            display: block;
-            margin: 10px 0;
-            color: #3498db;
-            text-decoration: none;
-        }
-        p {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-top: 15px;
-        }
+        /* [CSS anterior mantido igual] */
+        body { font-family: Arial, sans-serif; background-color: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; color: #333; }
+        .container { background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); text-align: center; max-width: 600px; width: 100%; }
+        h1 { color: #2c3e50; margin-bottom: 20px; font-size: 28px; }
+        select, input[type="file"], input[type="text"] { display: block; margin: 15px auto; padding: 10px; width: 80%; border: 2px solid #3498db; border-radius: 8px; font-size: 16px; }
+        input[type="file"] { border-style: dashed; }
+        input[type="file"]::-webkit-file-upload-button { background-color: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        button { background-color: #2ecc71; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; cursor: pointer; transition: background-color 0.3s; margin-top: 20px; }
+        button:hover { background-color: #27ae60; }
+        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+        #preview { max-width: 100%; max-height: 300px; margin-top: 20px; border-radius: 10px; display: none; }
+        #output { margin-top: 20px; display: none; }
+        #output a { display: block; margin: 10px 0; color: #3498db; text-decoration: none; }
+        p { font-size: 14px; color: #7f8c8d; margin-top: 15px; }
     </style>
 </head>
 <body>
