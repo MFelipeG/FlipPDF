@@ -12,28 +12,148 @@
     <!-- Script do Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8442042587705069" crossorigin="anonymous"></script>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; color: #333; }
-        .container { background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); text-align: center; max-width: 600px; width: 100%; }
-        h1 { color: #2c3e50; margin-bottom: 20px; font-size: 28px; }
-        h2 { color: #2c3e50; font-size: 20px; margin-top: 20px; }
-        select, input[type="file"], input[type="text"] { display: block; margin: 15px auto; padding: 10px; width: 80%; border: 2px solid #3498db; border-radius: 8px; font-size: 16px; }
-        input[type="file"] { border-style: dashed; }
-        input[type="file"]::-webkit-file-upload-button { background-color: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-        button { background-color: #2ecc71; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; cursor: pointer; transition: background-color 0.3s; margin-top: 20px; }
-        button:hover { background-color: #27ae60; }
-        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
-        #preview { max-width: 100%; max-height: 300px; margin-top: 20px; border-radius: 10px; display: none; }
-        #output { margin-top: 20px; display: none; }
-        #output a { display: block; margin: 10px 0; color: #3498db; text-decoration: none; }
-        p { font-size: 14px; color: #7f8c8d; margin-top: 15px; }
-        .ad-space-top, .ad-space-side { margin: 15px auto; text-align: center; }
-        .ad-space-top { width: 100%; max-width: 728px; min-height: 90px; }
-        .ad-space-side { width: 160px; min-height: 600px; display: none; }
-        nav { position: absolute; top: 10px; right: 20px; }
-        nav a { margin-left: 15px; color: #3498db; text-decoration: none; font-size: 16px; }
-        @media (min-width: 768px) {
-            .container { display: flex; align-items: flex-start; }
-            .ad-space-side { display: block; margin-left: 20px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        nav {
+            width: 100%;
+            max-width: 1200px;
+            text-align: right;
+            padding: 10px 0;
+        }
+        nav a {
+            margin-left: 15px;
+            color: #3498db;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .ad-space-top {
+            width: 100%;
+            max-width: 728px;
+            min-height: 90px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .main-content {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        h2 {
+            color: #2c3e50;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        select, input[type="file"], input[type="text"] {
+            display: block;
+            margin: 15px auto;
+            padding: 10px;
+            width: 80%;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        input[type="file"] {
+            border-style: dashed;
+        }
+        input[type="file"]::-webkit-file-upload-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #27ae60;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        #preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        #output {
+            margin-top: 20px;
+            display: none;
+        }
+        #output a {
+            display: block;
+            margin: 10px 0;
+            color: #3498db;
+            text-decoration: none;
+        }
+        p {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 15px;
+        }
+        .ad-space-side {
+            width: 160px;
+            min-height: 600px;
+            margin-left: 20px;
+            display: none;
+        }
+        @media (min-width: 1024px) {
+            .main-content {
+                flex-wrap: nowrap;
+            }
+            .ad-space-side {
+                display: block;
+            }
+        }
+        @media (max-width: 767px) {
+            .container {
+                padding: 20px;
+            }
+            select, input[type="file"], input[type="text"] {
+                width: 90%;
+            }
         }
     </style>
 </head>
@@ -54,26 +174,28 @@
              (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
     </div>
-    <div class="container">
-        <h1>FlipPDF - Converta Seus Arquivos Facilmente</h1>
-        <h2>Converta JPG, PNG para PDF ou PDF para JPG Online</h2>
-        <p>O FlipPDF é uma ferramenta gratuita e fácil de usar para converter seus arquivos. Transforme imagens em PDF ou extraia imagens de PDFs em poucos cliques. Escolha entre tamanhos A4, Carta ou A3 e personalize o nome do arquivo!</p>
-        <select id="conversionType" onchange="updateInput()">
-            <option value="jpg-to-pdf">JPG para PDF</option>
-            <option value="png-to-pdf">PNG para PDF</option>
-            <option value="pdf-to-jpg">PDF para JPG</option>
-        </select>
-        <select id="pageSize" onchange="updateInput()">
-            <option value="a4">A4 (210x297mm)</option>
-            <option value="letter">Carta (8.5x11in)</option>
-            <option value="a3">A3 (297x420mm)</option>
-        </select>
-        <input type="file" id="fileInput" accept="image/jpeg" multiple>
-        <input type="text" id="fileName" placeholder="Nome do arquivo (opcional)">
-        <img id="preview" alt="Pré-visualização da imagem carregada">
-        <div id="output"></div>
-        <button id="convertBtn" onclick="convert()" disabled>Converter</button>
-        <p>Escolha o tipo de conversão e faça upload do(s) arquivo(s)!</p>
+    <div class="main-content">
+        <div class="container">
+            <h1>FlipPDF - Converta Seus Arquivos Facilmente</h1>
+            <h2>Converta JPG, PNG para PDF ou PDF para JPG Online</h2>
+            <p>O FlipPDF é uma ferramenta gratuita e fácil de usar para converter seus arquivos. Transforme imagens em PDF ou extraia imagens de PDFs em poucos cliques. Escolha entre tamanhos A4, Carta ou A3 e personalize o nome do arquivo!</p>
+            <select id="conversionType" onchange="updateInput()">
+                <option value="jpg-to-pdf">JPG para PDF</option>
+                <option value="png-to-pdf">PNG para PDF</option>
+                <option value="pdf-to-jpg">PDF para JPG</option>
+            </select>
+            <select id="pageSize" onchange="updateInput()">
+                <option value="a4">A4 (210x297mm)</option>
+                <option value="letter">Carta (8.5x11in)</option>
+                <option value="a3">A3 (297x420mm)</option>
+            </select>
+            <input type="file" id="fileInput" accept="image/jpeg" multiple>
+            <input type="text" id="fileName" placeholder="Nome do arquivo (opcional)">
+            <img id="preview" alt="Pré-visualização da imagem carregada">
+            <div id="output"></div>
+            <button id="convertBtn" onclick="convert()" disabled>Converter</button>
+            <p>Escolha o tipo de conversão e faça upload do(s) arquivo(s)!</p>
+        </div>
         <!-- Anúncio lateral (160x600) -->
         <div class="ad-space-side">
             <ins class="adsbygoogle"
