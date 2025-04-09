@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlipPDF - Converta Imagens e PDFs</title>
+    <meta name="description" content="Converta JPG e PNG para PDF ou PDF para JPG online e grátis com o FlipPDF. Ferramenta rápida, fácil e segura para conversão de arquivos.">
+    <meta name="keywords" content="conversor de PDF, JPG para PDF, PNG para PDF, PDF para JPG, conversor online grátis, FlipPDF">
+    <meta name="author" content="MFelipeG">
+    <meta name="robots" content="index, follow">
+    <title>FlipPDF - Converta JPG, PNG para PDF e PDF para JPG Online Grátis</title>
     <link rel="manifest" href="/manifest.json">
+    <!-- Script do Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8442042587705069" crossorigin="anonymous"></script>
     <style>
-        /* [CSS anterior mantido igual] */
         body { font-family: Arial, sans-serif; background-color: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; color: #333; }
         .container { background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); text-align: center; max-width: 600px; width: 100%; }
         h1 { color: #2c3e50; margin-bottom: 20px; font-size: 28px; }
+        h2 { color: #2c3e50; font-size: 20px; margin-top: 20px; }
         select, input[type="file"], input[type="text"] { display: block; margin: 15px auto; padding: 10px; width: 80%; border: 2px solid #3498db; border-radius: 8px; font-size: 16px; }
         input[type="file"] { border-style: dashed; }
         input[type="file"]::-webkit-file-upload-button { background-color: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
@@ -20,11 +26,38 @@
         #output { margin-top: 20px; display: none; }
         #output a { display: block; margin: 10px 0; color: #3498db; text-decoration: none; }
         p { font-size: 14px; color: #7f8c8d; margin-top: 15px; }
+        .ad-space-top, .ad-space-side { margin: 15px auto; text-align: center; }
+        .ad-space-top { width: 100%; max-width: 728px; min-height: 90px; }
+        .ad-space-side { width: 160px; min-height: 600px; display: none; }
+        nav { position: absolute; top: 10px; right: 20px; }
+        nav a { margin-left: 15px; color: #3498db; text-decoration: none; font-size: 16px; }
+        @media (min-width: 768px) {
+            .container { display: flex; align-items: flex-start; }
+            .ad-space-side { display: block; margin-left: 20px; }
+        }
     </style>
 </head>
 <body>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">Sobre</a>
+    </nav>
+    <!-- Anúncio no topo (728x90) -->
+    <div class="ad-space-top">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-8442042587705069"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
     <div class="container">
-        <h1>FlipPDF</h1>
+        <h1>FlipPDF - Converta Seus Arquivos Facilmente</h1>
+        <h2>Converta JPG, PNG para PDF ou PDF para JPG Online</h2>
+        <p>O FlipPDF é uma ferramenta gratuita e fácil de usar para converter seus arquivos. Transforme imagens em PDF ou extraia imagens de PDFs em poucos cliques. Escolha entre tamanhos A4, Carta ou A3 e personalize o nome do arquivo!</p>
         <select id="conversionType" onchange="updateInput()">
             <option value="jpg-to-pdf">JPG para PDF</option>
             <option value="png-to-pdf">PNG para PDF</option>
@@ -37,14 +70,26 @@
         </select>
         <input type="file" id="fileInput" accept="image/jpeg" multiple>
         <input type="text" id="fileName" placeholder="Nome do arquivo (opcional)">
-        <img id="preview" alt="Pré-visualização">
+        <img id="preview" alt="Pré-visualização da imagem carregada">
         <div id="output"></div>
         <button id="convertBtn" onclick="convert()" disabled>Converter</button>
         <p>Escolha o tipo de conversão e faça upload do(s) arquivo(s)!</p>
+        <!-- Anúncio lateral (160x600) -->
+        <div class="ad-space-side">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8442042587705069"
+                 data-ad-slot="0987654321"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script>
         const { jsPDF } = window.jspdf;
         const fileInput = document.getElementById('fileInput');
@@ -158,9 +203,9 @@
         }
     </script>
     <script>
-        if ('serviceworker' in navigator) {
+        if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceworker.register('/sw.js')
+                navigator.serviceWorker.register('/sw.js')
                     .then(reg => console.log('Service Worker registrado!', reg))
                     .catch(err => console.log('Erro ao registrar Service Worker:', err));
             });
