@@ -159,8 +159,7 @@
 </head>
 <body>
     <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">Sobre</a>
+        <a href="index.html">Sobre</a>
     </nav>
     <!-- Anúncio no topo (728x90) -->
     <div class="ad-space-top">
@@ -245,24 +244,27 @@
             preview.style.display = 'none';
             output.style.display = 'none';
             if (files.length > 0) {
-                if (conversionType.value === 'pdf-to-jpg') {
+                const type = conversionType.value;
+                const file = files[0];
+                if (type === 'pdf-to-jpg' && file.type === 'application/pdf') {
                     convertBtn.disabled = false;
-                } else if (files[0].type.match('image/*')) {
+                } else if ((type === 'jpg-to-pdf' && file.type === 'image/jpeg') || (type === 'png-to-pdf' && file.type === 'image/png')) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         preview.src = e.target.result;
                         preview.style.display = 'block';
                         convertBtn.disabled = false;
                     };
-                    reader.readAsDataURL(files[0]);
+                    reader.readAsDataURL(file);
                 } else {
-                    alert('Por favor, selecione um arquivo válido.');
+                    alert('Por favor, selecione um arquivo válido para o tipo de conversão escolhido.');
                     convertBtn.disabled = true;
                 }
             }
         });
 
         function convert() {
+            console.log('Função convert() chamada'); // Para depuração
             const files = fileInput.files;
             const type = conversionType.value;
             const size = pageSize.value;
