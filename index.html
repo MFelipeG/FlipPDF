@@ -7,7 +7,8 @@
     <meta name="keywords" content="sobre o FlipPDF, conversor de PDF online, JPG para PDF grátis, PDF para JPG">
     <meta name="author" content="MFelipeG">
     <meta name="robots" content="index, follow">
-    <title>Sobre o FlipPDF - Converta Arquivos Online</title>
+    <title>FlipPDF - Converta Arquivos Online</title>
+    <link rel="manifest" href="/manifest.json">
     <style>
         * {
             box-sizing: border-box;
@@ -87,8 +88,7 @@
 </head>
 <body>
     <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">Sobre</a>
+        <a href="converter.html">Converter</a>
     </nav>
     <div class="container">
         <h1>Sobre o FlipPDF</h1>
@@ -104,7 +104,16 @@
         <h2>Entre em contato</h2>
         <p>Tem dúvidas ou sugestões? Fale conosco pelo e-mail <a href="mailto:contato@flippdf.com">contato@flippdf.com</a> e ajude a melhorar o FlipPDF!</p>
         
-        <a href="index.html" class="cta-button">Experimente o FlipPDF Agora!</a>
+        <a href="converter.html" class="cta-button">Experimente o FlipPDF Agora!</a>
     </div>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registrado!', reg))
+                    .catch(err => console.log('Erro ao registrar Service Worker:', err));
+            });
+        }
+    </script>
 </body>
 </html>
