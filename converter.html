@@ -188,12 +188,12 @@
                 <option value="letter">Carta (8.5x11in)</option>
                 <option value="a3">A3 (297x420mm)</option>
             </select>
-            <input type="file" id="fileInput" accept="image/jpeg" multiple>
+            <input type="file" id="fileInput" accept="image/jpeg">
             <input type="text" id="fileName" placeholder="Nome do arquivo (opcional)">
             <img id="preview" alt="Pré-visualização da imagem carregada">
             <div id="output"></div>
             <button id="convertBtn" onclick="convert()" disabled>Converter</button>
-            <p>Escolha o tipo de conversão e faça upload do(s) arquivo(s)!</p>
+            <p>Escolha o tipo de conversão e faça upload do arquivo!</p>
         </div>
         <!-- Anúncio lateral (160x600) -->
         <div class="ad-space-side">
@@ -209,15 +209,15 @@
         </div>
     </div>
 
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script>
         // Configuração do pdf.js
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
         // Verifica se as bibliotecas foram carregadas
         window.addEventListener('load', () => {
-            if (!window.jspdf || !window.jspdf.jsPDF) {
+            if (typeof jsPDF === 'undefined') {
                 console.error('Erro: jsPDF não foi carregado corretamente.');
             }
             if (!window.pdfjsLib) {
@@ -242,10 +242,10 @@
             fileInput.value = '';
             if (type === 'jpg-to-pdf') {
                 fileInput.accept = 'image/jpeg';
-                fileInput.multiple = true;
+                fileInput.multiple = false;
             } else if (type === 'png-to-pdf') {
                 fileInput.accept = 'image/png';
-                fileInput.multiple = true;
+                fileInput.multiple = false;
             } else if (type === 'pdf-to-jpg') {
                 fileInput.accept = 'application/pdf';
                 fileInput.multiple = false;
@@ -295,49 +295,40 @@
 
             if (type === 'jpg-to-pdf' || type === 'png-to-pdf') {
                 console.log('Iniciando conversão de JPG/PNG para PDF');
-                if (!window.jspdf || !window.jspdf.jsPDF) {
+                if (typeof jsPDF === 'undefined') {
                     console.error('jsPDF não está disponível');
                     alert('Erro: Não foi possível carregar a biblioteca de conversão. Tente novamente mais tarde.');
                     return;
                 }
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: size });
-                let processed = 0;
-
-                Array.from(files).forEach((file, index) => {
-                    console.log('Processando arquivo:', file.name);
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        console.log('Arquivo lido:', file.name);
-                        const imgData = e.target.result;
-                        const img = new Image();
-                        img.src = imgData;
-                        img.onload = function() {
-                            console.log('Imagem carregada:', file.name);
-                            const width = pdf.internal.pageSize.getWidth() - 20;
-                            const height = (img.height * width) / img.width;
-                            if (index > 0) {
-                                console.log('Adicionando nova página');
-                                pdf.addPage();
-                            }
-                            try {
-                                pdf.addImage(imgData, type === 'jpg-to-pdf' ? 'JPEG' : 'PNG', 10, 10, width, height);
-                                console.log('Imagem adicionada ao PDF:', file.name);
-                            } catch (error) {
-                                console.error('Erro ao adicionar imagem ao PDF:', error);
-                            }
-                            processed++;
-                            if (processed === files.length) {
-                                console.log('Salvando PDF');
-                                pdf.save(`${fileName}.pdf`);
-                            }
-                        };
-                        img.onerror = function() {
-                            console.error('Erro ao carregar imagem:', file.name);
-                        };
+                const pdf = new jsPDF('p', 'mm', size);
+                const file = files[0];
+                console.log('Processando arquivo:', file.name);
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    console.log('Arquivo lido:', file.name);
+                    const imgData = e.target.result;
+                    const img = new Image();
+                    img.src = imgData;
+                    img.onload = function() {
+                        console.log('Imagem carregada:', file.name);
+                        const width = pdf.internal.pageSize.getWidth() - 20;
+                        const height = (img.height * width) / img.width;
+                        try {
+                            pdf.addImage(imgData, type === 'jpg-to-pdf' ? 'JPEG' : 'PNG', 10, 10, width, height);
+                            console.log('Imagem adicionada ao PDF:', file.name);
+                            pdf.save(`${fileName}.pdf`);
+                            console.log('PDF salvo');
+                        } catch (error) {
+                            console.error('Erro ao adicionar imagem ao PDF:', error);
+                            alert('Erro ao converter o arquivo. Verifique o console para mais detalhes.');
+                        }
                     };
-                    reader.readAsDataURL(file);
-                });
+                    img.onerror = function() {
+                        console.error('Erro ao carregar imagem:', file.name);
+                        alert('Erro ao carregar a imagem. Tente outro arquivo.');
+                    };
+                };
+                reader.readAsDataURL(file);
             } else if (type === 'pdf-to-jpg') {
                 console.log('Iniciando conversão de PDF para JPG');
                 if (!window.pdfjsLib) {
@@ -377,6 +368,7 @@
                         }
                     } catch (error) {
                         console.error('Erro ao processar PDF:', error);
+                        alert('Erro ao converter o PDF. Verifique o console para mais detalhes.');
                     }
                 };
                 reader.readAsArrayBuffer(file);
