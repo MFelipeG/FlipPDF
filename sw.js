@@ -2,7 +2,7 @@ const CACHE_NAME = 'flip-pdf-cache-v1';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/about.html',
+    '/converter.html',
     'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js'
 ];
