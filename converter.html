@@ -212,7 +212,19 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script>
-        const { jsPDF } = window.jspdf;
+        // Configuração do pdf.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
+        // Verifica se as bibliotecas foram carregadas
+        window.addEventListener('load', () => {
+            if (!window.jspdf || !window.jspdf.jsPDF) {
+                console.error('Erro: jsPDF não foi carregado corretamente.');
+            }
+            if (!window.pdfjsLib) {
+                console.error('Erro: pdf.js não foi carregado corretamente.');
+            }
+        });
+
         const fileInput = document.getElementById('fileInput');
         const conversionType = document.getElementById('conversionType');
         const pageSize = document.getElementById('pageSize');
@@ -222,6 +234,7 @@
         const convertBtn = document.getElementById('convertBtn');
 
         function updateInput() {
+            console.log('updateInput chamado');
             const type = conversionType.value;
             preview.style.display = 'none';
             output.style.display = 'none';
@@ -240,20 +253,25 @@
         }
 
         fileInput.addEventListener('change', function() {
+            console.log('Arquivo selecionado:', this.files);
             const files = this.files;
             preview.style.display = 'none';
             output.style.display = 'none';
             if (files.length > 0) {
                 const type = conversionType.value;
                 const file = files[0];
+                console.log('Tipo de conversão:', type, 'Tipo do arquivo:', file.type);
                 if (type === 'pdf-to-jpg' && file.type === 'application/pdf') {
                     convertBtn.disabled = false;
+                    console.log('Botão habilitado para PDF para JPG');
                 } else if ((type === 'jpg-to-pdf' && file.type === 'image/jpeg') || (type === 'png-to-pdf' && file.type === 'image/png')) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
+                        console.log('Pré-visualização carregada');
                         preview.src = e.target.result;
                         preview.style.display = 'block';
                         convertBtn.disabled = false;
+                        console.log('Botão habilitado para JPG/PNG para PDF');
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -264,62 +282,101 @@
         });
 
         function convert() {
-            console.log('Função convert() chamada'); // Para depuração
+            console.log('Função convert() chamada');
             const files = fileInput.files;
             const type = conversionType.value;
             const size = pageSize.value;
             const fileName = fileNameInput.value.trim() || 'convertido';
 
-            if (!files.length) return;
+            if (!files.length) {
+                console.log('Nenhum arquivo selecionado');
+                return;
+            }
 
             if (type === 'jpg-to-pdf' || type === 'png-to-pdf') {
+                console.log('Iniciando conversão de JPG/PNG para PDF');
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    console.error('jsPDF não está disponível');
+                    alert('Erro: Não foi possível carregar a biblioteca de conversão. Tente novamente mais tarde.');
+                    return;
+                }
+                const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: size });
                 let processed = 0;
 
                 Array.from(files).forEach((file, index) => {
+                    console.log('Processando arquivo:', file.name);
                     const reader = new FileReader();
                     reader.onload = function(e) {
+                        console.log('Arquivo lido:', file.name);
                         const imgData = e.target.result;
                         const img = new Image();
                         img.src = imgData;
                         img.onload = function() {
+                            console.log('Imagem carregada:', file.name);
                             const width = pdf.internal.pageSize.getWidth() - 20;
                             const height = (img.height * width) / img.width;
-                            if (index > 0) pdf.addPage();
-                            pdf.addImage(imgData, type === 'jpg-to-pdf' ? 'JPEG' : 'PNG', 10, 10, width, height);
+                            if (index > 0) {
+                                console.log('Adicionando nova página');
+                                pdf.addPage();
+                            }
+                            try {
+                                pdf.addImage(imgData, type === 'jpg-to-pdf' ? 'JPEG' : 'PNG', 10, 10, width, height);
+                                console.log('Imagem adicionada ao PDF:', file.name);
+                            } catch (error) {
+                                console.error('Erro ao adicionar imagem ao PDF:', error);
+                            }
                             processed++;
                             if (processed === files.length) {
+                                console.log('Salvando PDF');
                                 pdf.save(`${fileName}.pdf`);
                             }
+                        };
+                        img.onerror = function() {
+                            console.error('Erro ao carregar imagem:', file.name);
                         };
                     };
                     reader.readAsDataURL(file);
                 });
             } else if (type === 'pdf-to-jpg') {
+                console.log('Iniciando conversão de PDF para JPG');
+                if (!window.pdfjsLib) {
+                    console.error('pdf.js não está disponível');
+                    alert('Erro: Não foi possível carregar a biblioteca de conversão. Tente novamente mais tarde.');
+                    return;
+                }
                 const file = files[0];
                 const reader = new FileReader();
                 reader.onload = async function(e) {
+                    console.log('Arquivo PDF lido');
                     const typedArray = new Uint8Array(e.target.result);
-                    const pdf = await pdfjsLib.getDocument(typedArray).promise;
-                    output.innerHTML = '';
-                    output.style.display = 'block';
+                    try {
+                        const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                        console.log('PDF carregado, número de páginas:', pdf.numPages);
+                        output.innerHTML = '';
+                        output.style.display = 'block';
 
-                    for (let i = 1; i <= pdf.numPages; i++) {
-                        const page = await pdf.getPage(i);
-                        const viewport = page.getViewport({ scale: 2 });
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        canvas.width = viewport.width;
-                        canvas.height = viewport.height;
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            console.log('Processando página:', i);
+                            const page = await pdf.getPage(i);
+                            const viewport = page.getViewport({ scale: 2 });
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            canvas.width = viewport.width;
+                            canvas.height = viewport.height;
 
-                        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-                        const dataUrl = canvas.toDataURL('image/jpeg');
+                            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+                            console.log('Página renderizada:', i);
+                            const dataUrl = canvas.toDataURL('image/jpeg');
 
-                        const link = document.createElement('a');
-                        link.href = dataUrl;
-                        link.download = `${fileName}_pagina_${i}.jpg`;
-                        link.textContent = `Baixar Página ${i}`;
-                        output.appendChild(link);
+                            const link = document.createElement('a');
+                            link.href = dataUrl;
+                            link.download = `${fileName}_pagina_${i}.jpg`;
+                            link.textContent = `Baixar Página ${i}`;
+                            output.appendChild(link);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao processar PDF:', error);
                     }
                 };
                 reader.readAsArrayBuffer(file);
